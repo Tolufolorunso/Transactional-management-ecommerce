@@ -1,6 +1,6 @@
 # Transactional-management-ecommerce
 
-https://docs.google.com/document/...........
+https://docs.google.com/document/d/1edsW0I0BTPznlaCAcQvGytoQnHn1MWYb5THT-aBObDY/edit#
 
 ## A platform where students can sell old and new items to make money.
 

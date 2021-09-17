@@ -1,0 +1,102 @@
+<% layout('layouts/boilerplate') %>
+<section class="auth mt-3 mb-lg-5">
+  <div class="container">
+    <div class="text-center">
+      <h2>Register</h2>
+      <%= info %>
+      <p class="lead">Lorem ipsum dolor sit amet consectetur facere.</p>
+      <% if (typeof firstname !== 'undefined') { %>
+      <h2><%= firstname %></h2>
+      <% }%>
+    </div>
+    <div class="row justify-content-center my-2">
+      <div class="col-lg-5">
+        <form action="/register" method="POST" class="needs-validation" novalidate>
+          <div class="mb-3 form-floating">
+            <input
+              type="text"
+              id="firstname"
+              class="form-control"
+              placeholder="firstname"
+              required
+              name="firstname"
+            />
+            <label for="firstname">Firstname</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="text"
+              id="lastname"
+              class="form-control"
+              placeholder="lastname"
+              required
+              name="lastname"
+            />
+            <label for="lastname">Lastname</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="text"
+              id="username"
+              class="form-control"
+              placeholder="username"
+              name="username"
+              required
+            />
+            <label for="username">username</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              placeholder="eg@studentvend.com"
+              required
+            />
+            <label for="email">Email</label>
+            <div class="invalid-feedback">enter valid email</div>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              placeholder="*******"
+              required
+            />
+            <label for="password">Password</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="password"
+              id="confirm-password"
+              name="confirmPassword"
+              class="form-control"
+              placeholder="Confirm Password"
+              required
+            />
+            <label for="confirm-password">Confirm Password</label>
+          </div>
+          <div class="form-check mb-3">
+            <input type="checkbox" name="seller" id="seller" class="form-check-input" />
+            <label for="seller" class="form-check-label">Register as a Seller</label>
+          </div>
+          <div class="d-grid mb-3">
+            <input type="submit" value="Sign Up" class="btn btn-success btn-lg" />
+          </div>
+          <div class="text-center mb-5">
+            <div class="lead fs-6 fw-light">
+              By clicking "Sign Up", I agree with StudentVend's
+              <span class="text-success">Terms of Service</span>
+            </div>
+            <div class="lead fs-6 fw-light">
+              Already have an account? <a href="/login"><span class="text-success">Log In</span></a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
