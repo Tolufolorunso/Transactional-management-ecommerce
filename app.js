@@ -9,6 +9,7 @@ const xss = require('xss-clean')
 const helmet = require('helmet')
 const hpp = require('hpp')
 const ejsMate = require('ejs-mate')
+const methodOverride = require('method-override')
 
 const app = express()
 
@@ -20,7 +21,11 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
 //middleware
-app.use(helmet())
+app.use(
+  helmet({
+    contentSecurityPolicy: false
+  })
+)
 app.use(cors())
 
 app.options('*', cors())
@@ -42,13 +47,27 @@ app.use(xss())
 //prevent parameter pollution
 app.use(hpp())
 
+app.use(methodOverride('_method'))
 app.use(express.json({ limit: '100mb' }))
+app.use(express.urlencoded({ extended: true }))
 
 app.use(compression())
 
+app.all('*', (req, res, next) => {
+  req.user = {
+    _id: '60d9a5af11cbd50cccc68446',
+    lastname: 'kolawole',
+    firstname: 'tolu'
+  }
+  next()
+})
+
 // HOMEPAGE route
 app.get('/', (req, res) => {
-  res.render('home')
+  res.render('home', {
+    path: '/',
+    pathName: 'Home Page'
+  })
 })
 
 // Authentication Route
@@ -58,11 +77,17 @@ app.get('/', (req, res) => {
 // app.use('/api/v1/users', require('./routes/userRoute'))
 
 // Products Route
-// app.use('/api/v1/users', require('./routes/productRoute'))
+app.use('/products', require('./routes/productsRoute'))
+
+// Other Route like about us page, contact etc
+app.use(require('./routes/otherRoute'))
 
 //Handling unhandle routes
 app.all('*', (req, res, next) => {
-  res.render('404')
+  res.render('404', {
+    path: '/404',
+    pathName: '404 Page'
+  })
   // res.status(404).json({
   //   status: 'fail',
   //   errorMessage: `Can't find ${req.originalUrl} on this server`

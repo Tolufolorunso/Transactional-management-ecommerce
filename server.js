@@ -10,13 +10,13 @@ const connectDB = require('./db/connectDB')
 
 const startServer = async () => {
   // Local DB, comment out when you want to push to github
-  const DB = process.env.DATABASE_LOCAL
+  // const DB = process.env.DATABASE_LOCAL
 
   // Live DB, uncomment when you want to push to github
-  // const DB = process.env.DATABASE
+  const DB = process.env.DATABASE
 
   try {
-    // await connectDB(DB)
+    await connectDB(DB)
     app.listen(PORT, () => {
       console.log(`App runing on port ${PORT} and DB Connection successful`)
     })
