@@ -2,15 +2,15 @@
 <!-- Open Content -->
 <section class="bg-light">
   <div class="container pb-5">
-    <div class="row">
-      <div class="col-lg-5 mt-5">
+    <div class="row gx-4">
+      <div class="col-lg-4 mt-5">
         <div class="card mb-3">
           <img
             class="card-img img-fluid"
             src="<%= product.images[0].url %>"
             alt="Card image cap"
             id="product-detail"
-            height="400px"
+            height="400"
           />
         </div>
         <div class="row">
@@ -102,7 +102,7 @@
         </div>
       </div>
       <!-- col end -->
-      <div class="col-lg-7 mt-5">
+      <div class="col-lg-8 mt-5">
         <div class="card">
           <div class="card-body">
             <h1 class="h2"><%= product.title %></h1>
@@ -146,8 +146,8 @@
               <li>Excepteur sint</li>
             </ul>
 
-            <form action="" method="POST">
-              <input type="hidden" name="product-title" value="Activewear" />
+            <form action="/cart" method="POST">
+              <input type="hidden" name="productId" value="<%= product._id %>" />
               <div class="row">
                 <div class="col-auto">
                   <ul class="list-inline pb-3">
@@ -165,7 +165,7 @@
                   <ul class="list-inline pb-3">
                     <li class="list-inline-item text-right">
                       Quantity
-                      <input type="hidden" name="product-quanity" id="product-quanity" value="1" />
+                      <input type="hidden" name="quantity" id="product-quanity" value="1" />
                     </li>
                     <li class="list-inline-item"><span class="btn btn-success" id="btn-minus">-</span></li>
                     <li class="list-inline-item"><span class="badge bg-secondary" id="var-value">1</span></li>
@@ -175,27 +175,12 @@
               </div>
               <div class="row pb-3">
                 <div class="col d-grid">
-                  <a
-                    href="/products/<%= product._id %>/edit"
-                    class="btn btn-success btn-lg"
-                    name="submit"
-                    value="buy"
-                    >edit</a
-                  >
-                </div>
-
-                <div class="col d-grid">
                   <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocard">
                     Add To Cart
                   </button>
                 </div>
               </div>
             </form>
-            <div class="col d-grid">
-              <form action="/products/<%= product._id %>?_method=DELETE" method="POST">
-                <button class="btn btn-danger btn-lg">Delete</button>
-              </form>
-            </div>
           </div>
         </div>
       </div>

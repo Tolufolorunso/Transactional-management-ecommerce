@@ -1,3 +1,29 @@
 /*
 Custom Css
 */
+
+/* CART PAGE */
+.empty-cart {
+  height: 80vh;
+}
+
+.empty-cart__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cart-logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-img {
+  height: 185px !important;
+  width: 100%;
+}

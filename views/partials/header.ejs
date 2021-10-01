@@ -51,15 +51,19 @@
           id="templatemo_main_nav"
         >
           <div class="flex-fill">
-            <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+            <ul class="nav navbar-nav d-flex justify-content-betwene mx-lg-auto">
               <li class="nav-item">
                 <a class="nav-link <%= path === '/' ? 'text-success': '' %> " href="/">Home</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link <%= path === '/products' ? 'text-success': '' %>" href="/products">Shop</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item">     
+                <% if(currentUser){ %> 
+                  <% if(currentUser.role === 'seller' || currentUser.role === 'admin') { %>
                 <a class="nav-link <%= path === '/products/add' ? 'text-success': '' %>" href="/products/add">Add product</a>
+                <% } %> 
+            <% } %> 
               </li>
               <li class="nav-item">
                 <a class="nav-link <%= path === '/about' ? 'text-success': '' %>" href="/about">About</a>
@@ -86,8 +90,9 @@
             >
               <i class="fa fa-fw fa-search text-dark mr-2"></i>
             </a>
-            <a class="nav-icon position-relative text-decoration-none" href="#">
+            <a class="nav-icon position-relative text-decoration-none" href="/cart">
               <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
+              <% if(currentUser) {%> 
               <span
                 class="
                   position-absolute
@@ -99,13 +104,29 @@
                   bg-light
                   text-dark
                 "
-                >1</span
-              >
+                >
+                
+                  9
+                 </span>
+                  <% } %> 
             </a>
-            <a class="nav-icon position-relative text-decoration-none" href="#">
+          <% if (!currentUser) { %>
+           <a class="nav-icon position-relative text-decoration-none" href="/login">
               <i class="fa fa-fw fa-user text-dark mr-3"></i>
               Login
             </a>
+            <a class="nav-icon position-relative text-decoration-none" href="/register">
+              <i class="fa fa-fw fa-user text-dark mr-3"></i>
+              Register
+            </a>
+          <% } %>
+            
+            <% if(currentUser){ %> 
+             <a class="nav-icon position-relative text-decoration-none" href="/logout">
+              <i class="fa fa-fw fa-user text-dark mr-3"></i>
+              logout
+            </a>
+            <% } %> 
           </div>
         </div>
       </div>
