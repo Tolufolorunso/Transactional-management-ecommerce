@@ -42,11 +42,9 @@
               <h3 class="h2">Perfect for student who is ready to make money</h3>
               <p>
                 StudentVend Shop is an eCommerce site where students can sell old and new items to make money,
-
-                <a class="text-success" href="/users/register">Register as Seller</a> or
-                <a class="text-success" href="https://stories.freepik.com/" target="_blank"
-                  >Register as Buyer</a
-                >.
+                <% if(!currentUser) { %>
+                <a class="text-success" href="/register">Register as Seller</a> or
+                <a class="text-success" href="/register">Register as Buyer</a>. <% } %>
               </p>
             </div>
           </div>
@@ -159,7 +157,7 @@
     <div class="row">
       <div class="col-12 col-md-4 mb-4">
         <div class="card h-100">
-          <a href="shop-single.html">
+          <a href="/">
             <img src="/img/feature_prod_01.jpg" class="card-img-top" alt="..." />
           </a>
           <div class="card-body">
@@ -173,7 +171,7 @@
               </li>
               <li class="text-muted text-right">$240.00</li>
             </ul>
-            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Gym Weight</a>
+            <a href="/" class="h2 text-decoration-none text-dark">Gym Weight</a>
             <p class="card-text">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia deserunt.
             </p>
@@ -222,7 +220,7 @@
               </li>
               <li class="text-muted text-right">$360.00</li>
             </ul>
-            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Summer Addides Shoes</a>
+            <a href="/" class="h2 text-decoration-none text-dark">Summer Addides Shoes</a>
             <p class="card-text">
               Curabitur ac mi sit amet diam luctus porta. Phasellus pulvinar sagittis diam, et scelerisque
               ipsum lobortis nec.

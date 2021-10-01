@@ -7,14 +7,30 @@
     </div>
     <div class="row justify-content-center my-2">
       <div class="col-lg-5">
-        <form action="">
+        <form action="/login" method="POST" class="needs-validation" novalidate>
           <div class="mb-3 form-floating">
-            <input type="email" id="email" class="form-control" placeholder="eg@studentvend.com" />
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              placeholder="eg@studentvend.com"
+              name="username"
+              required
+            />
             <label for="email">Email</label>
+            <div class="invalid-feedback">enter valid email</div>
           </div>
           <div class="mb-3 form-floating">
-            <input type="password" id="password" name="password" class="form-control" placeholder="*******" />
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              placeholder="*******"
+              required
+            />
             <label for="password">Password</label>
+            <div class="invalid-feedback">enter valid password</div>
           </div>
 
           <div class="form-check mb-3">
