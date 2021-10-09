@@ -1,4 +1,5 @@
-<% layout('layouts/boilerplate') %>
+<%- include('../partials/sellerHeader') %>
+
 <section class="auth mt-3 mb-lg-5">
   <div class="container">
     <div class="text-center">
@@ -23,17 +24,6 @@
               required
               name="title"
               value="<%= product.title %>"
-            />
-          </div>
-          <div class="mb-3">
-            <label for="imageUrl">imageUrl</label>
-            <input
-              type="text"
-              id="imageUrl"
-              name="imageUrl"
-              class="form-control"
-              required
-              value="<%= product.imageUrl %>"
             />
           </div>
           <div class="mb-3">
@@ -71,6 +61,24 @@
             </select>
           </div>
           <div class="mb-3">
+            <label for="available" class="form-label">Available</label>
+            <select name="available" id="available" class="form-select form-select-lg">
+              <option value="true" <%= product.available ? 'selected' : '' %>  >Yes</option>
+              <option value="false" <%= product.available ? 'selected' : '' %>>No</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="manufacturer" class="form-label">Manufacturer</label>
+            <input
+              type="text"
+              id="manufacturer"
+              class="form-control"
+              placeholder="manufacturer"
+              name="manufacturer"
+              value="<%= product.manufacturer %>"
+            />
+          </div>
+          <div class="mb-3">
             <label for="description" class="form-label">Description</label>
             <textarea
               id="description"
@@ -92,3 +100,4 @@
     </div>
   </div>
 </section>
+<%- include('../partials/footer') %>

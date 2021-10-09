@@ -21,13 +21,33 @@
   })
 })()
 
-const clearCart = document.getElementById('clear-cart')
-if (clearCart) {
-  clearCart.addEventListener('click', async ev => {
-    const data = await axios.delete('/clear-cart')
-  })
-}
+// fade out for flash messages
+setTimeout(function () {
+  const error = document.getElementById('error')
+  const success = document.getElementById('success')
+  const info = document.getElementById('info')
+  if (error) {
+    error.classList.add('fade')
+  }
+  if (success) {
+    success.classList.add('fade')
+  }
+  if (info) {
+    info.classList.add('fade')
+  }
+}, 3000)
 
+// delete product
+const deleteBtns = document.querySelectorAll('.delete-btn')
+deleteBtns.forEach(btn => {
+  btn.addEventListener('click', e => {
+    const isSure = confirm('Are you sure?')
+    if (!isSure) {
+      e.preventDefault()
+      return false
+    }
+  })
+})
 // Register user
 // const registerForm = document.getElementById('register-form')
 // if (registerForm) {

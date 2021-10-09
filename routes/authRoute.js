@@ -1,9 +1,20 @@
 const express = require('express')
 const passport = require('passport')
+const { check, body } = require('express-validator')
+const User = require('../models/userModel')
+
+
 const { registerForm, loginForm, register, login } = require('../controllers/authController')
+const { validateRegister } = require('../utils/validate')
 const router = express.Router()
 
-router.route('/register').get(registerForm).post(register)
+router
+  .route('/register')
+  .get(registerForm)
+  .post(
+    validateRegister(),
+    register
+  )
 
 router
   .route('/login')
@@ -20,7 +31,7 @@ router
 router.get('/logout', (req, res) => {
   req.logout()
   req.flash('success', 'You have been logged out!')
-  res.redirect('/products')
+  res.redirect('/login')
 })
 
 module.exports = router

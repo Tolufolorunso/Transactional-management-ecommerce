@@ -1,4 +1,5 @@
-<% layout('layouts/boilerplate') %>
+<%- include('../partials/userHeader') %>
+
 <!-- Start Content -->
 <% products %>
 <div class="container py-5">
@@ -71,20 +72,15 @@
         <%}%>
         <br />
         <% products.forEach((product) => {%>
-        <a href="products/<%= product._id %>" class="text-center text-decoration-none col-md-4">
+        <a href="products/<%= product._id %>" class="text-decoration-none col-md-6 col-lg-4">
           <div class="card mb-4 product-wap rounded-0">
-            <div class="card rounded-0" style="height: 184px">
-              <img
-                class="card-img rounded-0 img-fluid"
-                src="<%= product.images[0].url %>"
-                alt="<%= product.title %> photo"
-                height="184px"
-                width="184"
-              />
+            <div class="card rounded-0" style="max-height: 250px !important;">
+              <img style="height: 250px !important;" class="card-img rounded-0 products-img"
+                src="<%= product.images[0].url %>" alt="<%= product.title %> photo" />
             </div>
             <div class="card-body">
-              <h3 class="h3"><%= product.title %></h3>
-              <ul class="list-unstyled d-flex justify-content-center mb-1">
+              <h3 class="h3 text-capitalize"><%= product.title.substring(1,20) %>...</h3>
+              <ul class="list-unstyled d-flex mb-1">
                 <li>
                   <i class="text-warning fa fa-star"></i>
                   <i class="text-warning fa fa-star"></i>
@@ -93,7 +89,7 @@
                   <i class="text-muted fa fa-star"></i>
                 </li>
               </ul>
-              <p class="text-center mb-0">$250.00</p>
+              <p class="mb-0">$250.00</p>
             </div>
           </div>
         </a>
@@ -103,12 +99,7 @@
       <div div="row">
         <ul class="pagination pagination-lg justify-content-end">
           <li class="page-item disabled">
-            <a
-              class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
-              href="#"
-              tabindex="-1"
-              >1</a
-            >
+            <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="#" tabindex="-1">1</a>
           </li>
           <li class="page-item">
             <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="#">2</a>
@@ -122,3 +113,4 @@
   </div>
 </div>
 <!-- End Content -->
+<%- include('../partials/footer') %>

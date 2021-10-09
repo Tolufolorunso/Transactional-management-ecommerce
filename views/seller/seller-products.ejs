@@ -1,0 +1,54 @@
+<%- include('../partials/sellerHeader') %>
+
+<section class="auth mt-3 mb-lg-5">
+  <div class="container">
+    <% if(products.length) { %>
+    <div class="row">
+      <h1 class="display-3">My Products</h1>
+      <div class="table-responsive-sm">
+        <table class="table table-dark table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th colspan="3" scope="col">Product-name</th>
+              <th colspan="2" scope="col">Product-code</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach((product,index) => { %>
+            <tr>
+              <th scope="row"><%= index + 1 %></th>
+              <td colspan="3"><%= product.title %></td>
+              <td colspan="2"><%= product.productCode %></td>
+              <td>
+                <a href="/products/<%- product._id %>/edit" class="btn btn-warning btn-sm">Edit</a>
+              </td>
+              <td>
+                <form
+                  action="/products/<%- product._id %>?_method=DELETE"
+                  method="post"
+                  id="delete__product-form"
+                >
+                  <input class="btn btn-warning btn-sm delete-btn" type="submit" value="del" />
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <% }else{ %>
+    <div class="empty-cart text">
+      <div class="empty-cart__content">
+        <div class="cart-logo"><i class="fas fa-cart-plus fa-2x"></i></div>
+        <p class="lead text-muted text-capitalize">You have no product. start to add product</p>
+        <a href="/users/seller/products/add" class="btn btn-warning text-capitalize">Add Products</a>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</section>
+<%- include('../partials/footer') %>
