@@ -9,11 +9,12 @@ const PORT = process.env.PORT || 4000
 const connectDB = require('./db/connectDB')
 
 const startServer = async () => {
-  // Local DB, comment out when you want to push to github
+  // Local DB, comment out when you want to push to githubb
   // const DB = process.env.DATABASE_LOCAL
 
   // Live DB, uncomment when you want to push to github
   const DB = process.env.DATABASE
+
 
   try {
     await connectDB(DB)
