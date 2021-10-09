@@ -25,7 +25,7 @@ router.get('/:itemID/edit', isLoggedIn, getProductToEdit)
 router.put('/:itemID', isLoggedIn, updateProduct)
 router.delete('/:itemID', isLoggedIn, deleteProduct)
 router.post('/', isLoggedIn, upload.array('images', 12), addProduct)
-// router.post('/', isLoggedIn, addProduct)
+// router.post('/', addProduct)
 
 // router.route('/login').get(loginForm)
 

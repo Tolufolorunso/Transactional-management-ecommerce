@@ -8,10 +8,18 @@ const sanitizeData = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const helmet = require('helmet')
 const hpp = require('hpp')
-const ejsMate = require('ejs-mate')
+// const ejsMate = require('ejs-mate')
 const methodOverride = require('method-override')
 const session = require('express-session')
 const flash = require('connect-flash')
+// const MongoStore = require('connect-mongo')(session)
+const MongoDBSession = require('connect-mongodb-session')(session)
+
+const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+dotenv.config({
+  path: './config.env'
+})
 
 // Require passport for authentication
 const passport = require('passport')
@@ -22,15 +30,21 @@ const AppError = require('./utils/appError')
 
 const app = express()
 
+const store = new MongoDBSession({
+  uri: process.env.DATABASE_LOCAL,
+  collection: 'sessions'
+})
+
 const sessionConfigs = {
   secret: 'secretwillbechange',
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-    maxAge: 1000 * 60 * 60 * 24 * 7
-  }
+    // expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 60 * 1000 * 60 * 1
+  },
+  store: store
 }
 app.use(session(sessionConfigs))
 
@@ -46,7 +60,7 @@ passport.deserializeUser(User.deserializeUser())
 app.use(express.static(`${__dirname}/public`))
 
 // Template Engine
-app.engine('ejs', ejsMate)
+// app.engine('ejs', ejsMate)
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
@@ -86,20 +100,24 @@ app.use(compression())
 
 app.use(async (req, res, next) => {
   res.locals.currentUser = req.user
+  res.locals.session = req.session
   res.locals.success = req.flash('success')
   res.locals.error = req.flash('error')
   res.locals.info = req.flash('info')
+  // console.log('app 107', req.session.cart)
   next()
 })
 
 // HOMEPAGE route
 app.get('/', (req, res) => {
+  console.log(req.originalUrl)
   // if (req.user) {
   //   return res.redirect('/products')
   // }
   res.render('home', {
     path: '/',
-    pageTitle: 'Home Page'
+    pageTitle: 'Home Page',
+    pathUrl: `${req.originalUrl}`
   })
 })
 
@@ -107,16 +125,16 @@ app.get('/', (req, res) => {
 app.use(require('./routes/authRoute'))
 
 // Users Route
-// app.use('/api/v1/users', require('./routes/userRoute'))
+app.use('/users', require('./routes/userRoute'))
 
 // Products Route
 app.use('/products', require('./routes/productsRoute'))
 
 // Other Route like about us page, contact etc
-app.use(require('./routes/shopRoute'))
+app.use( require('./routes/shopRoute'))
 
 // Other Route like about us page, contact etc
-app.use(require('./routes/otherRoute'))
+app.use( require('./routes/otherRoute'))
 
 //Handling unhandle routes
 app.all('*', (req, res, next) => {

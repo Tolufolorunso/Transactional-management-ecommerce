@@ -1,4 +1,4 @@
-<% layout('layouts/boilerplate') %>
+<%- include('../partials/sellerHeader') %>
 <section class="auth mt-3 mb-lg-5">
   <div class="container">
     <div class="text-center">
@@ -7,16 +7,18 @@
     </div>
     <div class="row justify-content-center my-2">
       <div class="col-lg-5">
-        <form action="/products" method="POST" class="needs-validationh" enctype="multipart/form-data">
+        <form
+          action="/products"
+          method="POST"
+          class="needs-validation"
+          enctype="multipart/form-data"
+          novalidate
+        >
           <!--novalidate enctype="multipart/form-data" -->
 
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" id="title" class="form-control" placeholder="title" required name="title" />
-          </div>
-          <div class="mb-3">
-            <label for="images" class="form-label">Choose Images</label>
-            <input type="file" id="images" name="images" class="form-control" multiple />
           </div>
           <div class="mb-3">
             <label for="price" class="form-label">Price</label>
@@ -54,6 +56,23 @@
             </select>
           </div>
           <div class="mb-3">
+            <label for="available" class="form-label">Available</label>
+            <select name="available" id="available" class="form-select form-select-lg">
+              <option value="true" selected>Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="manufacturer" class="form-label">Manufacturer</label>
+            <input
+              type="text"
+              id="manufacturer"
+              class="form-control"
+              placeholder="manufacturer"
+              name="manufacturer"
+            />
+          </div>
+          <div class="mb-3">
             <label for="description" class="form-label">Description</label>
             <textarea
               id="description"
@@ -64,6 +83,10 @@
               rows="4"
             ></textarea>
           </div>
+          <div class="mb-3">
+            <label for="images" class="form-label">Choose Images</label>
+            <input type="file" id="images" name="images" class="form-control" multiple />
+          </div>
           <div class="d-grid mb-3">
             <input type="submit" value="Add Product" class="btn btn-success btn-lg" />
           </div>
@@ -72,3 +95,4 @@
     </div>
   </div>
 </section>
+<%- include('../partials/footer') %>

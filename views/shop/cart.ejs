@@ -1,27 +1,28 @@
-<% layout('layouts/boilerplate') %>
+<%- include('../partials/userHeader') %>
+
 <section class="cart" style="background-color: #f5f5f5">
   <div class="container pb-5">
-    <% if(carts.length > 0) { %>
+    <% if(cart !== null && cart.items.length > 0) { %>
     <div class="row pt-md-4">
-      <div class="col-md-7">Item</div>
-      <div class="col-md-1 text-center">QUANTITY</div>
+      <div class="col-md-6">Item</div>
+      <div class="col-md-2 text-center">QUANTITY</div>
       <div class="col-md-2 text-center">UNIT PRICE</div>
       <div class="col-md-2 text-center">SUBTOTAL</div>
     </div>
-    <% carts.forEach(p => { %>
+    <% cart.items.forEach(p => { %>
     <div class="row pb-md-2">
       <div class="card mb-3" style="width: 100%">
         <div class="row">
           <div class="col-md-1">
-            <img src="<%= p.title %>" class="img-fluid rounded-start" alt="<%= p.title %> " />
+            <img src="<%= p.imagePath %>" class="img-fluid rounded-start" alt="<%= p.title %> " />
           </div>
-          <div class="col-md-6 border-end">
-            <p>Seller: <span class="fs-6"><%= currentUser.name %> </span></p>
+          <div class="col-md-5 border-end">
+            <p>Product-code: <span class="fs-6"><%= p.productCode %> </span></p>
             <div class="card-bod">
-              <h5 class="card-title"><%= p.productId.title %></h5>
-              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+              <h5 class="card-title"><%= p.title %></h5>
+
               <div>
-                <form action="/cart/<%= p.productId._id %>?_method=DELETE" method="post">
+                <form action="/cart/<%= p.productId %>?_method=DELETE" method="post">
                   <button type="submit" class="btn btn-link text-decoration-none" id="clear-cart">
                     Remove
                   </button>
@@ -29,19 +30,17 @@
               </div>
             </div>
           </div>
-          <div class="col-md-1 text-center border-end pt-3">
-            <input type="hidden" name="id" value="<%= p.productId._id %>" id="product-id" />
-            <input
-              type="number"
-              name="quantity"
-              value="<%= p.quantity %>"
-              id="quantity"
-              class="form-control border-1 border-end-0 border-top-0 border-start-0 text-center quantity"
-              min="1"
-              max="20"
-            />
+          <div class="col-md-2 text-center border-end pt-3">
+            <ul class="list-inline pb-3">
+              <input type="hidden" name="id" value="<%= p._id %>" id="product-id" />
+              <li class="list-inline-item"><span class="btn btn-success" id="btn-minus">-</span></li>
+              <li class="list-inline-item">
+                <span class="badge bg-secondary" id="var-value"><%= p.qty %></span>
+              </li>
+              <li class="list-inline-item"><span class="btn btn-success" id="btn-plus">+</span></li>
+            </ul>
           </div>
-          <div class="col-md-2 text-center border-end pt-3">30</div>
+          <div class="col-md-2 text-center border-end pt-3"><%= p.price %></div>
           <div class="col-md-2 text-center pt-3">300</div>
         </div>
       </div>
@@ -51,6 +50,8 @@
     <form action="/clear-cart?_method=DELETE" method="post">
       <button type="submit" id="clear-cart">Clear Carts</button>
     </form>
+    <a href="/checkout" class="btn btn-success text-capitalize">Checkout</a>
+
     <% } else { %>
     <div class="row p-4 empty-cart">
       <div class="col-12">
@@ -71,3 +72,4 @@
     <% } %>
   </div>
 </section>
+<%- include('../partials/footer') %>

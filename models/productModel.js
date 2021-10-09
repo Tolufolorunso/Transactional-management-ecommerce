@@ -3,22 +3,29 @@ const Schema = mongoose.Schema
 
 const productSchema = new Schema(
   {
-    title: { type: String, required: true },
+    productCode: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    title: { type: String, required: true, lowercase: true },
     description: { type: String, required: true },
-    category: { type: String, required: true },
-    brand: String,
-    color: String,
-    size: Number,
+    category: { type: String, lowercase: true, required: false },
+    price: { type: Number, required: true },
+    stock: { type: Number, required: true },
+    userID: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    manufacturer: { type: String, lowercase: true },
+    rating: { type: Number },
+    available: {
+      type: Boolean,
+      required: true
+    },
     images: [
       {
         url: String,
         filename: String
       }
     ],
-    price: { type: Number, required: true },
-    userID: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    stock: { type: Number, required: true },
-    rating: { type: Number },
     numReviews: { type: Number },
     updatedAt: { type: Date, default: Date.now }
   },

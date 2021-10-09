@@ -1,4 +1,5 @@
-<% layout('layouts/boilerplate') %>
+<%- include('../partials/userHeader') %>
+
 <section class="auth mt-3 mb-lg-5">
   <div class="container">
     <div class="text-center">
@@ -13,45 +14,60 @@
       <div class="col-lg-5">
         <form action="/register" method="POST" id="register-form" class="needs-validation" novalidate>
           <div class="mb-3 form-floating">
-            <input type="text" id="name" class="form-control" placeholder="name" required name="name" />
+            <input type="text" id="name"
+              class="form-control <%= errors.find(e => e.param === 'name') ? 'border-danger' : '' %>" placeholder="name"
+              required name="name" value="<%= oldInput.name %>" />
             <label for="name">Fullname</label>
             <div class="invalid-feedback">enter your fullname</div>
+            <div class="text-danger fw-light">
+              <% errors.forEach(e => { %>
+              <% if(e.param === 'name'){ %>
+              <%= e.msg %>
+              <%  } %>
+              <% }) %>
+            </div>
           </div>
           <div class="mb-3 form-floating">
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form-control"
-              placeholder="eg@studentvend.com"
-              required
-            />
+            <input type="email" id="email" name="email"
+              class="form-control <%= errors.find(e => e.param === 'email') ? 'border-danger' : '' %>"
+              placeholder="eg@studentvend.com" required value="<%= oldInput.email %>" />
             <label for="email">Email</label>
             <div class="invalid-feedback">enter valid email</div>
+            <div class="text-danger fw-light">
+              <% errors.forEach(e => { %>
+              <% if(e.param === 'email'){ %>
+              <%= e.msg %>
+              <%  } %>
+              <% }) %>
+            </div>
           </div>
           <div class="mb-3 form-floating">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              class="form-control"
-              placeholder="*******"
-              required
-            />
+            <input type="password" id="password" name="password"
+              class="form-control <%= errors.find(e => e.param === 'password') ? 'border-danger' : '' %>"" placeholder="
+              *******" required value="<%= oldInput.password %> " />
             <label for="password">Password</label>
             <div class="invalid-feedback">enter valid password</div>
+            <div class="text-danger fw-light">
+              <% errors.forEach(e => { %>
+              <% if(e.param === 'password'){ %>
+              <%= e.msg %>
+              <%  } %>
+              <% }) %>
+            </div>
           </div>
           <div class="mb-3 form-floating">
-            <input
-              type="password"
-              id="confirm-password"
-              name="confirmPassword"
-              class="form-control"
-              placeholder="Confirm Password"
-              required
-            />
+            <input type="password" id="confirm-password" name="confirmPassword"
+              class="form-control <%= errors.find(e => e.param === 'confirmPassword') ? 'border-danger' : '' %>""
+              placeholder=" Confirm Password" required value="<%= oldInput.confirmPassword %> " />
             <label for="confirm-password">Confirm Password</label>
             <div class="invalid-feedback">enter valid password</div>
+            <div class="text-danger fw-light fs-6">
+              <% errors.forEach(e => { %>
+              <% if(e.param === 'confirmPassword'){ %>
+              <%= e.msg %>
+              <%  } %>
+              <% }) %>
+            </div>
           </div>
           <div class="form-check mb-3">
             <input type="checkbox" name="role" id="seller" class="form-check-input" />
@@ -74,3 +90,4 @@
     </div>
   </div>
 </section>
+<%- include('../partials/footer') %>

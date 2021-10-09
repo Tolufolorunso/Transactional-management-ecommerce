@@ -12,30 +12,29 @@ exports.getProductForm = (req, res, next) => {
 }
 
 exports.addProduct = catchAsync(async (req, res, next) => {
-  if (req.user.role === 'buyer' || req.user.role === 'admin') {
+  if (req.user.role === 'buyer') {
     return res.redirect('/products')
   }
-  const { title, price, description, stock, category } = req.body
-  console.log(title, price, description, stock, category)
+
+  if (req.body.available === 'true') {
+    req.body.available = true
+  } else {
+    req.body.available = false
+  }
+  req.body.title = req.body.title
+
   const product = new Product({
     ...req.body,
+    // productCode: `${req.body.title[0]}${faker.helpers.replaceSymbolWithNumber('####-##########')}`,
+    productCode: Math.random(),
     userID: req.user._id
   })
-  console.log(req.files)
+
   product.images = req.files.map(file => {
     return { url: file.path, filename: file.filename }
   })
-  // product.images = [
-  //   {
-  //     url: 'https://res.cloudinary.com/tolufolorunso/image/upload/v1631709505/StudentVend/ivyinetcncp0xhiy9pzz.png',
-  //     filename: 'file name'
-  //   }
-  // ]
-  // product.images = [
-  //   'https://res.cloudinary.com/tolufolorunso/image/upload/v1631709505/StudentVend/ivyinetcncp0xhiy9pzz.png',
-  //   'https://res.cloudinary.com/tolufolorunso/image/upload/v1631709505/StudentVend/ivyinetcncp0xhiy9pzz.png',
-  //   'https://res.cloudinary.com/tolufolorunso/image/upload/v1631709505/StudentVend/ivyinetcncp0xhiy9pzz.png'
-  // ]
+
+
   await product.save()
   req.flash('success', `Product added successfully, create another product`)
   res.status(201).redirect('/products/add')
@@ -43,8 +42,6 @@ exports.addProduct = catchAsync(async (req, res, next) => {
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
   const products = await Product.find({})
-  products.__v = undefined
-
   res.render('products/allProducts', {
     path: '/products',
     pageTitle: 'Products Page',
@@ -71,11 +68,15 @@ exports.getProduct = catchAsync(async (req, res, next) => {
 })
 
 exports.getProductToEdit = async (req, res, next) => {
-  if (req.user.role === 'buyer' || req.user.role === 'admin') {
+  if (req.user.role === 'buyer') {
     return res.redirect('/products')
   }
   const product = await Product.findById(req.params.itemID)
-  res.render('products/editProduct', {
+  if (!product) {
+    req.flash('info', `Product with ID '${req.params.itemID}' not found`)
+    return res.redirect('/users/seller')
+  }
+  res.render('seller/edit-product', {
     path: '/shop',
     pageTitle: 'Products',
     time: req.time,
@@ -94,9 +95,21 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
 })
 
 exports.deleteProduct = catchAsync(async (req, res, next) => {
-  if (req.user.role === 'buyer' || req.user.role === 'admin') {
+  if (req.user.role === 'buyer') {
     return res.redirect('/products')
   }
-  await Product.findByIdAndRemove(req.params.itemID)
-  res.redirect('/products')
+
+  // const product = await Product.findByIdAndRemove(req.params.itemID)
+  const product = await Product.findOneAndRemove({ userID: req.user._id, _id: req.params.itemID })
+  if (!product) {
+    req.flash('info', `Product with ID '${req.params.itemID}' not found`)
+    return res.redirect('/users/seller')
+  }
+
+  req.flash('success', `'${product.title}' is deleted successfully`)
+  // res.render('seller/seller-products', {
+  //   path: '/users/seller',
+  //   pageTitle: 'Seller Dashboard'
+  // })
+  res.redirect('/users/seller')
 })
