@@ -14,8 +14,6 @@ const session = require('express-session')
 const flash = require('connect-flash')
 // const MongoStore = require('connect-mongo')(session)
 const MongoDBSession = require('connect-mongodb-session')(session)
-
-const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 dotenv.config({
   path: './config.env'

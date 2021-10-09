@@ -123,3 +123,4 @@ dist
 tmp/
 config.env
 node_modules
+seeder.js
