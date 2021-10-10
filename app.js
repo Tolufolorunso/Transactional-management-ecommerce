@@ -29,7 +29,7 @@ const AppError = require('./utils/appError')
 const app = express()
 
 const store = new MongoDBSession({
-  uri: process.env.DATABASE_LOCAL,
+  uri: process.env.DATABASE,
   collection: 'sessions'
 })
 
