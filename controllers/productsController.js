@@ -85,7 +85,7 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   const totalItems = await Product.find().countDocuments()
 
   const products = await query
-  console.log(page,Math.ceil(totalItems / ITEMS_PER_PAGE));
+  console.log(products);
   res.render('products/allProducts', {
     path: '/products',
     pageTitle: 'Products Page',

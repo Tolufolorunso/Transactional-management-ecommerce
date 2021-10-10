@@ -41,7 +41,7 @@ exports.getCart = catchAsync(async (req, res) => {
     })
   } catch (err) {
     console.log(err.message)
-    res.redirect('/')
+    res.redirect('/cart')
   }
 })
 
@@ -49,6 +49,7 @@ exports.getCart = catchAsync(async (req, res) => {
 exports.addToCart = catchAsync(async (req, res) => {
   // const productId = req.params.id
   const productId = req.body.productId
+  console.log(req.body);
   try {
     // get the correct cart, either from the db, session, or an empty cart.
     let user_cart
@@ -187,6 +188,7 @@ exports.checkout = catchAsync(async (req, res, next) => {
 
 // create products array to store the info of each product in the cart
 async function productsFromCart(cart) {
+  console.log(cart);
   let products = [] // array of objects
   for (const item of cart.items) {
     let foundProduct = (await Product.findById(item.productId).populate('category')).toObject()
@@ -194,5 +196,6 @@ async function productsFromCart(cart) {
     foundProduct['totalPrice'] = item.price
     products.push(foundProduct)
   }
+  console.log('hello 198',products);
   return products
 }
