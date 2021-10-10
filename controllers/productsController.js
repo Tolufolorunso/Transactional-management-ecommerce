@@ -1,6 +1,8 @@
 const Product = require('../models/productModel')
 const catchAsync = require('../utils/catchAsync')
 
+const ITEMS_PER_PAGE = 15
+
 exports.getProductForm = (req, res, next) => {
   if (req.user.role === 'buyer') {
     return res.redirect('/products')
@@ -41,13 +43,61 @@ exports.addProduct = catchAsync(async (req, res, next) => {
 })
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.find({})
+  let query
+
+  const reqQuery = {...req.query}
+
+  // fields to exclude
+  const removeFields = ['select','sort','page', 'limit'];
+
+  // Loop over removeFields and delete them from reqQuery
+ removeFields.forEach(param => delete reqQuery[param])
+
+ // Create query string
+ let queryStr = JSON.stringify(reqQuery)
+
+ // create operators ($gt, $gte, etc)
+ queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g,match => `$${match}`)
+
+ // Finding resource
+  query = Product.find(JSON.parse(queryStr))
+
+  // Select Fields
+  if(req.query.select) {
+    const fields = req.query.select.split(',').join(' ')
+    query = query.select(fields)
+  }
+
+  // Sort
+  if(req.query.sort) {
+    const sortBy = req.query.sort.split(',').join(' ')
+    query = query.sort(sortBy)
+  } else {
+    query = query.sort('-createdAt')
+  }
+
+  // Pagination
+  const page = parseInt(req.query.page, ITEMS_PER_PAGE) || 1
+  const limit = parseInt(req.query.limit, ITEMS_PER_PAGE) || 15
+  const skip = (page -1) * limit
+  query = query.skip(skip).limit(limit)
+
+  const totalItems = await Product.find().countDocuments()
+
+  const products = await query
+  console.log(page,Math.ceil(totalItems / ITEMS_PER_PAGE));
   res.render('products/allProducts', {
     path: '/products',
     pageTitle: 'Products Page',
     time: req.time,
     isAuthenticated: false,
-    products
+    products:products,
+    currentPage : page,
+    hasNextPage : ITEMS_PER_PAGE * page < totalItems,
+    hasPreviousPage : page > 1,
+    nextPage: page + 1,
+    previousPage: page - 1,
+    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
   })
 })
 
