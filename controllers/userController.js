@@ -1,6 +1,7 @@
 const catchAsync = require('../utils/catchAsync')
 const Product = require('../models/productModel')
 
+
 const getSellerDashboard = catchAsync(async (req, res, next) => {
   let sellerProducts
   sellerProducts = await Product.find({ userID: req.user._id })

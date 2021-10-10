@@ -48,6 +48,31 @@ deleteBtns.forEach(btn => {
     }
   })
 })
+
+// Sort By
+// const sortBy = document.getElementById('sort-by')
+
+// if(sortBy) {
+//   sortBy.addEventListener('change', (e) => {
+//     try {
+//       const res = await fetch('http://localhost:4000/products?sort=5', {
+//         method: 'POST',
+//         mode: 'cors',
+//         headers: {
+//           Accept: 'application/json',
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(userData)
+//       })
+//       if (res.status !== 200) {
+//       }
+//     } catch (error) {
+//       console.log(error)
+//     }
+//   })
+// }
+
+
 // Register user
 // const registerForm = document.getElementById('register-form')
 // if (registerForm) {
