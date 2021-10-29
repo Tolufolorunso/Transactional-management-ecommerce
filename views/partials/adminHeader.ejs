@@ -21,6 +21,7 @@
 
  <body class="position-relative">
    <!-- Start flash -->
+
    <!-- Start Top Nav -->
    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
      <%- include('../partials/flash.ejs') %>
@@ -68,82 +69,43 @@
                <a class="nav-link <%= path === '/' ? 'text-success': '' %> " href="/">Home</a>
              </li>
              <li class="nav-item">
-               <a class="nav-link <%= path === '/products' ? 'text-success': '' %>" href="/products">Shop</a>
+               <a class="nav-link <%= path === '/users/id' ? 'text-success': '' %>" href="/users/admin">All products</a>
              </li>
              <li class="nav-item">
-               <a class="nav-link <%= path === '/about' ? 'text-success': '' %>" href="/about">About</a>
+               <a class="nav-link <%= path === '/users' ? 'text-success': '' %>" href="/users">Users</a>
              </li>
              <li class="nav-item">
-               <a class="nav-link <%= path === '/contact' ? 'text-success': '' %>" href="/contact">Contact</a>
+               <% if(currentUser){ %>
+               <% if(currentUser.role === 'seller' || currentUser.role === 'admin') { %>
+               <a class="nav-link <%= path === '/users/seller/products/add' ? 'text-success': '' %>"
+                 href="/users/seller/products/add">Add product</a>
+               <% } %>
+               <% } %>
+             </li>
+             <li class="nav-item">
+               <a class="nav-link <%= path === '/users/seller/products/sold' ? 'text-success': '' %>"
+                 href="/users/seller/products/sold">Order</a>
              </li>
            </ul>
          </div>
          <div class="navbar align-self-center d-flex">
-           <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
-             <div class="input-group">
-               <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ..." />
-               <div class="input-group-text">
-                 <i class="fa fa-fw fa-search"></i>
-               </div>
-             </div>
-           </div>
-           <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
-             <i class="fa fa-fw fa-search text-dark mr-2"></i>
-           </a>
-           <a class="nav-icon position-relative text-decoration-none" href="/cart">
-             <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-
-             <span class="
-                  position-absolute
-                  top-0
-                  left-100
-                  translate-middle
-                  badge
-                  rounded-pill
-                  bg-light
-                  text-dark
-                ">
-               <% if(session.cart) { %>
-               <%= session.cart.items.length %>
-               <% }else { %>
-               0
-               <% } %>
-             </span>
-           </a>
-           <% if (!currentUser) { %>
-           <a class="nav-icon position-relative text-decoration-none" href="/login">
-             <i class="fa fa-fw fa-user text-dark mr-3"></i>
-             Login
-           </a>
-           <a class="nav-icon position-relative text-decoration-none" href="/register">
-             <i class="fa fa-fw fa-user text-dark mr-3"></i>
-             Register
-           </a>
-           <% } %>
-
            <% if(currentUser){ %>
-
-           <!-- <a class="nav-icon position-relative text-decoration-none" href="/logout">
-              <i class="fa fa-fw fa-user text-dark mr-3"></i>
-              logout
-            </a> -->
            <div class="nav-item dropdown">
-             <a class="nav-link dropdown-toggle nav-icon position-relative text-capitalize" href="#" id="navbarDropdown"
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+             <a class="nav-link dropdown-toggle nav-icon position-relative" href="#" id="navbarDropdown" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
                <i class="fa fa-fw fa-user text-dark mr-3"></i>
                <%= currentUser.name.split(' ')[0] %>
              </a>
-
              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                <li><a class="dropdown-item" href="#">Profile</a></li>
+               <li><a class="dropdown-item" href="#">Setting</a></li>
                <li>
                  <hr class="dropdown-divider">
                </li>
                <li>
                  <a class="dropdown-item text-decoration-none" href="/logout">
                    logout
-                 </a>
-               </li>
+                 </a></li>
              </ul>
            </div>
            <% } %>

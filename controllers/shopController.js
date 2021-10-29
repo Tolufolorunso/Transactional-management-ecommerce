@@ -1,27 +1,28 @@
-const csrf = require('csurf')
+const csrf = require('csurf');
+const Product = require('../models/productModel');
+const catchAsync = require('../utils/catchAsync');
+const User = require('../models/userModel');
+const Cart = require('../models/cartModel');
 
-const Product = require('../models/productModel')
-const catchAsync = require('../utils/catchAsync')
-const User = require('../models/userModel')
-const Cart = require('../models/cartModel')
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.getCart = catchAsync(async (req, res) => {
   try {
     // find the cart, whether in session or in db based on the user state
-    let cart_user
+    let cart_user;
     if (req.user) {
-      cart_user = await Cart.findOne({ user: req.user._id })
+      cart_user = await Cart.findOne({ user: req.user._id });
     }
 
     // if user is signed in and has cart, load user's cart from the db
     if (req.user && cart_user) {
-      req.session.cart = cart_user
+      req.session.cart = cart_user;
       return res.render('shop/cart', {
         pageTitle: 'Shopping Cart Page',
         path: '/cart',
         cart: cart_user,
         products: await productsFromCart(cart_user)
-      })
+      });
     }
     // if there is no cart in session and user is not logged in, cart is empty
     if (!req.session.cart) {
@@ -30,7 +31,7 @@ exports.getCart = catchAsync(async (req, res) => {
         path: '/cart',
         cart: null,
         products: null
-      })
+      });
     }
     // otherwise, load the session's cart
     return res.render('shop/cart', {
@@ -38,42 +39,42 @@ exports.getCart = catchAsync(async (req, res) => {
       pageTitle: 'Shopping Cart Page',
       path: '/cart',
       products: await productsFromCart(req.session.cart)
-    })
+    });
   } catch (err) {
-    console.log(err.message)
-    res.redirect('/cart')
+    console.log(err.message);
+    res.redirect('/cart');
   }
-})
+});
 
 // GET: add a product to the shopping cart when "Add to cart" button is pressed
 exports.addToCart = catchAsync(async (req, res) => {
   // const productId = req.params.id
-  const productId = req.body.productId
+  const productId = req.body.productId;
   console.log(req.body);
   try {
     // get the correct cart, either from the db, session, or an empty cart.
-    let user_cart
+    let user_cart;
     if (req.user) {
-      user_cart = await Cart.findOne({ user: req.user._id })
+      user_cart = await Cart.findOne({ user: req.user._id });
     }
-    let cart
+    let cart;
     if ((req.user && !user_cart && req.session.cart) || (!req.user && req.session.cart)) {
-      cart = await new Cart(req.session.cart)
+      cart = await new Cart(req.session.cart);
     } else if (!req.user || !user_cart) {
-      cart = new Cart({})
+      cart = new Cart({});
     } else {
-      cart = user_cart
+      cart = user_cart;
     }
 
     // add the product to the cart
-    const product = await Product.findById(productId)
-    const itemIndex = cart.items.findIndex(p => p.productId == productId)
+    const product = await Product.findById(productId);
+    const itemIndex = cart.items.findIndex(p => p.productId == productId);
     if (itemIndex > -1) {
       // if product exists in the cart, update the quantity
-      cart.items[itemIndex].qty++
-      cart.items[itemIndex].price = cart.items[itemIndex].qty * product.price
-      cart.totalQty++
-      cart.totalCost += product.price
+      cart.items[itemIndex].qty++;
+      cart.items[itemIndex].price = cart.items[itemIndex].qty * product.price;
+      cart.totalQty++;
+      cart.totalCost += product.price;
     } else {
       // if product does not exists in cart, find it in the db to retrieve its price and add new item
       cart.items.push({
@@ -83,48 +84,48 @@ exports.addToCart = catchAsync(async (req, res) => {
         title: product.title,
         imagePath: product.images[0].url,
         productCode: product.productCode
-      })
-      cart.totalQty++
-      cart.totalCost += product.price
+      });
+      cart.totalQty++;
+      cart.totalCost += product.price;
     }
 
     // if the user is logged in, store the user's id and save cart to the db
     if (req.user) {
-      cart.user = req.user._id
-      await cart.save()
+      cart.user = req.user._id;
+      await cart.save();
     }
-    req.session.cart = cart
-    req.flash('success', 'Item added to the shopping cart')
+    req.session.cart = cart;
+    req.flash('success', 'Item added to the shopping cart');
     // res.redirect(req.headers.referer)
-    res.redirect('/cart')
+    res.redirect('/cart');
   } catch (err) {
-    console.log(err.message)
-    res.redirect('/cart')
+    console.log(err.message);
+    res.redirect('/cart');
   }
-})
+});
 
 exports.clearCart = catchAsync(async (req, res) => {
   // const user = await User.findByIdAndUpdate(req.user._id, { $set: { cart: { items: [] } } })
-  let cart
+  let cart;
   try {
     if (req.user) {
-      cart = await Cart.findOne({ user: req.user._id })
+      cart = await Cart.findOne({ user: req.user._id });
     } else if (req.session.cart) {
-      cart = await new Cart(req.session.cart)
+      cart = await new Cart(req.session.cart);
     }
-    req.session.cart = null
-    await Cart.findByIdAndRemove(cart._id)
-    res.redirect('/cart')
+    req.session.cart = null;
+    await Cart.findByIdAndRemove(cart._id);
+    res.redirect('/cart');
   } catch (err) {
-    console.log(err.message)
-    res.redirect('/cart')
+    console.log(err.message);
+    res.redirect('/cart');
   }
-})
+});
 
 exports.updateProductQuantity = catchAsync(async (req, res) => {
-  const { quantity, id } = req.body
+  const { quantity, id } = req.body;
   try {
-    const user = await User.findById(req.user._id).populate('cart.items.productId')
+    const user = await User.findById(req.user._id).populate('cart.items.productId');
     // const updatedCart = user.cart.items.map(item => {
     //   if (item.productId._id.toString() === id.toString()) {
     //     return { ...item, quantity }
@@ -137,65 +138,157 @@ exports.updateProductQuantity = catchAsync(async (req, res) => {
     //   msg: 'hello'
     // })
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 exports.deleteCartItem = catchAsync(async (req, res) => {
-  const productId = req.params.id
-  let cart
+  const productId = req.params.id;
+  let cart;
   try {
     if (req.user) {
-      cart = await Cart.findOne({ user: req.user._id })
+      cart = await Cart.findOne({ user: req.user._id });
     } else if (req.session.cart) {
-      cart = await new Cart(req.session.cart)
+      cart = await new Cart(req.session.cart);
     }
 
     //fnd the item with productId
-    let itemIndex = cart.items.findIndex(p => p.productId == productId)
+    let itemIndex = cart.items.findIndex(p => p.productId == productId);
     if (itemIndex > -1) {
       //find the product to find its price
-      cart.totalQty -= cart.items[itemIndex].qty
-      cart.totalCost -= cart.items[itemIndex].price
-      await cart.items.remove({ _id: cart.items[itemIndex]._id })
+      cart.totalQty -= cart.items[itemIndex].qty;
+      cart.totalCost -= cart.items[itemIndex].price;
+      await cart.items.remove({ _id: cart.items[itemIndex]._id });
     }
-    req.session.cart = cart
+    req.session.cart = cart;
     //save the cart it only if user is logged in
     if (req.user) {
-      await cart.save()
+      await cart.save();
     }
     //delete cart if qty is 0
     if (cart.totalQty <= 0) {
-      req.session.cart = null
-      await Cart.findByIdAndRemove(cart._id)
+      req.session.cart = null;
+      await Cart.findByIdAndRemove(cart._id);
     }
-    res.redirect('/cart')
+    res.redirect('/cart');
   } catch (err) {
-    console.log(err.message)
-    res.redirect('/')
+    console.log(err.message);
+    res.redirect('/');
   }
-})
+});
 
-exports.checkout = catchAsync(async (req, res, next) => {
-  res.render('shop/checkout', {
+exports.getCheckout = catchAsync(async (req, res, next) => {
+  try {
+    // find the cart, whether in session or in db based on the user state
+    let cart_user;
+    if (req.user) {
+      cart_user = await Cart.findOne({ user: req.user._id });
+    }
+
+    let products;
+
+    if (req.user && cart_user) {
+      products = await productsFromCart(cart_user);
+    } else {
+      products = await productsFromCart(req.session.cart);
+    }
+
+    console.log(`${req.protocol}://${req.get('host')}/checkout/success`);
+
+    let lineItems = products.map(p => {
+      return {
+        quantity: p.qty,
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            description: p.description,
+            address: {},
+            name: p.title
+          },
+          unit_amount: p.price * 100
+        }
+      };
+    });
+
+    console.log('218', lineItems);
+
+    const sessionId = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      success_url: `${req.protocol}://${req.get('host')}/checkout/success`,
+      cancel_url: `${req.protocol}://${req.get('host')}/checkout/cancel`,
+      line_items: lineItems
+    });
+
+    // if user is signed in and has cart, load user's cart from the db
+    if (req.user && cart_user) {
+      req.session.cart = cart_user;
+      return res.render('shop/checkout', {
+        pageTitle: 'checkout Page',
+        path: '/checkout',
+        cart: cart_user,
+        products: products,
+        sessionId: sessionId.id
+      });
+    }
+    // if there is no cart in session and user is not logged in, cart is empty
+    if (!req.session.cart) {
+      return res.redirect('/products');
+    }
+    // otherwise, load the session's cart
+    return res.render('shop/checkout', {
+      pageTitle: 'checkout Page',
+      path: '/checkout',
+      cart: req.session.cart,
+      products: products,
+      sessionId: sessionId
+    });
+  } catch (err) {
+    console.log(err);
+    res.redirect('/cart');
+  }
+});
+
+exports.getSuccess = catchAsync(async (req, res) => {
+  let cart;
+  try {
+    if (req.user) {
+      cart = await Cart.findOne({ user: req.user._id });
+    } else if (req.session.cart) {
+      cart = await new Cart(req.session.cart);
+    }
+    req.session.cart = null;
+    await Cart.findByIdAndRemove(cart._id);
+    res.redirect('/cart');
+  } catch (err) {
+    console.log(err.message);
+    res.redirect('/cart');
+  }
+  res.render('shop/success', {
     pageTitle: 'checkout Page',
     path: '/checkout'
-    // total: cart.totalCost,
-    // csrfToken: req.csrfToken(),
-    // errorMsg,
-  })
-})
+  });
+});
+
+exports.getCancel = catchAsync(async (req, res) => {
+  res.render('shop/cancel', {
+    pageTitle: 'checkout Page',
+    path: '/checkout'
+  });
+});
 
 // create products array to store the info of each product in the cart
 async function productsFromCart(cart) {
-  console.log(cart);
-  let products = [] // array of objects
+  // console.log(cart);
+  let products = []; // array of objects
   for (const item of cart.items) {
-    let foundProduct = (await Product.findById(item.productId).populate('category')).toObject()
-    foundProduct['qty'] = item.qty
-    foundProduct['totalPrice'] = item.price
-    products.push(foundProduct)
+    let foundProduct = (
+      await Product.findById(item.productId).populate('category')
+    ).toObject();
+    foundProduct['qty'] = item.qty;
+    foundProduct['totalPrice'] = item.price;
+    products.push(foundProduct);
   }
-  console.log('hello 198',products);
-  return products
+  // console.log('hello 198',products);
+  return products;
 }

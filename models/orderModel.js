@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const OrderSchema = new Schema({
   product: [
@@ -18,7 +18,8 @@ const OrderSchema = new Schema({
       required: true,
       ref: 'User'
     }
-  }
-})
+  },
+  paid: Boolean
+});
 
-module.exports = mongoose.model('Order', OrderSchema)
+module.exports = mongoose.model('Order', OrderSchema);

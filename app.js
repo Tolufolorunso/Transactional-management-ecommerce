@@ -29,7 +29,7 @@ const AppError = require('./utils/appError')
 const app = express()
 
 const store = new MongoDBSession({
-  uri: process.env.DATABASE,
+  uri: process.env.DATABASE_LOCAL,
   collection: 'sessions'
 })
 
@@ -128,8 +128,15 @@ app.use('/users', require('./routes/userRoute'))
 // Products Route
 app.use('/products', require('./routes/productsRoute'))
 
-// Other Route like about us page, contact etc
+// Shop Route 
 app.use( require('./routes/shopRoute'))
+
+// Seller Routes
+app.use('/seller', require('./routes/sellerRoute'))
+
+// Admin Routes
+app.use('/admin', require('./routes/adminRoute'))
+
 
 // Other Route like about us page, contact etc
 app.use( require('./routes/otherRoute'))

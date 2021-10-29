@@ -1,1 +1,27 @@
-<section>checkout</section>
+<%- include('../partials/userHeader') %>
+<section class="cart" style="background-color: #f5f5f5">
+  <div class="container pb-5">
+    <h1>checkout</h1>
+
+    <div class="mt-4">
+      <button class="btn btn-warning" id="order-btn">Order</button>
+      <script src="https://js.stripe.com/v3/"></script>
+      <script>
+        const products = '<%= products %>'
+        console.log(products);
+        const stripe =
+          Stripe(
+            'pk_test_51Jj9B9AU0JwGzVoboCouA0UIz7gYN9bCEYHiiyq8w790A2IgaGvVCyvTpMXXkVaCLshdPPXuVUFVPwh3o0x8F87d00xmaRc2DH'
+          );
+        const orderBtn = document.getElementById('order-btn')
+        orderBtn.addEventListener('click', (e) => {
+          stripe.redirectToCheckout({
+            sessionId: '<%= sessionId %>'
+          });
+        })
+      </script>
+    </div>
+  </div>
+
+</section>
+<%- include('../partials/footer') %>
