@@ -6,7 +6,8 @@ const {
   clearCart,
   deleteCartItem,
   updateProductQuantity,
-  checkout
+  getCheckout,
+  getSuccess,getCancel
 } = require('../controllers/shopController')
 const { isLoggedIn } = require('../middlewares/isLoggedIn')
 const router = express.Router()
@@ -16,6 +17,8 @@ router.post('/cart', addToCart)
 router.delete('/cart/:id', deleteCartItem)
 router.delete('/clear-cart', clearCart)
 router.patch('/update-cart', updateProductQuantity)
-router.get('/checkout', isLoggedIn, checkout)
+router.get('/checkout', isLoggedIn, getCheckout)
+router.get('/checkout/success', isLoggedIn, getSuccess)
+router.get('/checkout/cancel', isLoggedIn, getCancel)
 
 module.exports = router

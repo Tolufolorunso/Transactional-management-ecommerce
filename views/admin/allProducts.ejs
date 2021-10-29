@@ -1,10 +1,23 @@
-<%- include('../partials/sellerHeader') %>
+<%- include('../partials/adminHeader') %>
 
 <section class="auth mt-3 mb-lg-5">
   <div class="container">
     <% if(products.length) { %>
     <div class="row">
-      <h1 class="display-3">My Products</h1>
+      <h1 class="display-3">Admin Area</h1>
+      <div class="my">
+        <p>Total products: <span><%= totalItems %> </span></p>
+      </div>
+      <div class="row">
+        <div class="col-6 offset-6">
+          <form action="/users/admin" method="get">
+            <div class="mb-3">
+              <label for="search" class="form-label">Find a Product</label>
+              <input type="search" name="title" class="form-control" id="search" placeholder="Seacrh Product">
+            </div>
+          </form>
+        </div>
+      </div>
       <div class="table-responsive-sm">
         <table class="table table-dark table-hover">
           <thead>
@@ -14,6 +27,7 @@
               <th colspan="2" scope="col">Product-code</th>
               <th scope="col">Edit</th>
               <th scope="col">Delete</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -30,18 +44,56 @@
                   <input class="btn btn-warning btn-sm delete-btn" type="submit" value="del" />
                 </form>
               </td>
+              <td>
+                <a href="/products/<%- product._id %>" class="btn btn-warning btn-sm">View</a>
+              </td>
             </tr>
             <% }) %>
           </tbody>
         </table>
+      </div>
+      <div div="row">
+        <ul class="pagination pagination-lg justify-content-end">
+          <% if (currentPage !== 1 && previousPage !== 1) { %>
+          <li class="page-item">
+            <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/users/admin?page=1"
+              tabindex="-1">1</a>
+          </li>
+          <% } %>
+
+          <% if (hasPreviousPage) { %>
+          <li class="page-item">
+            <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+              href="/users/admin?page=<%= previousPage %>" tabindex="-1"><%= previousPage %></a>
+          </li>
+          <% } %>
+
+          <li class="page-item disabled">
+            <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+              href="/users/admin?page=<%= currentPage %>" tabindex="-1"><%= currentPage %></a>
+          </li>
+
+          <% if (hasNextPage) { %>
+          <li class="page-item">
+            <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+              href="/users/admin?page=<%= nextPage %>"><%= nextPage %></a>
+          </li>
+          <% } %>
+
+          <% if (lastPage !== currentPage && nextPage !== lastPage) { %>
+          <li class="page-item">
+            <a class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark"
+              href="/users/admin?page=<%= lastPage %>"><%= lastPage %></a>
+          </li>
+          <% } %>
+        </ul>
       </div>
     </div>
     <% }else{ %>
     <div class="empty-cart text">
       <div class="empty-cart__content">
         <div class="cart-logo"><i class="fas fa-cart-plus fa-2x"></i></div>
-        <p class="lead text-muted text-capitalize">You have no product. start to add product</p>
-        <a href="/users/seller/products/add" class="btn btn-warning text-capitalize">Add Products</a>
+        <p class="lead text-muted text-capitalize">No producta to display.</p>
       </div>
     </div>
     <% } %>
